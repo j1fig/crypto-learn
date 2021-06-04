@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-import argparse
-
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -40,16 +37,3 @@ def verify(msg, signature, public_key):
         return True
     except InvalidSignature:
         return False
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('message', type=str)
-    args = parser.parse_args()
-
-    pvt_key, pub_key = gen_keys()
-    msg = args.message.encode()
-    signature = sign(msg, pvt_key)
-
-    verified = verify(msg, signature, pub_key)
-    print(verified)
