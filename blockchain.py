@@ -1,3 +1,5 @@
+import json
+
 from cryptography.hazmat.primitives import hashes
 
 
@@ -15,6 +17,22 @@ class Block:
     @property
     def hash(self):
         return _hash(self.data, self.previous_hash)
+
+    def to_json(self):
+        return json.dumps({
+            'data': self.data.decode() if self.data is not None else None,
+            'previous_block': self.previous_block.to_json() if self.previous_block is not None else None,
+            'previous_hash': self.previous_hash.decode() if self.previous_hash is not None else None,
+        })
+
+    @classmethod
+    def from_json(cls, json_data):
+        block = cls(data=None)
+        bd = json.loads(json_data)
+        block.data = bd['data'].encode() if bd['data'] is not None else None
+        block.previous_hash = bd['previous_hash'].encode() if bd['previous_hash'] is not None else None
+        block.previous_block = Block.from_json(bd['previous_block']) if bd['previous_block'] is not None else None
+        return block
 
 
 def _hash(data, previous_hash):

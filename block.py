@@ -6,6 +6,15 @@ class TxBlock:
     def __init__(self, data=b'', previous_block=None):
         self._block = blockchain.Block(data, previous_block)
 
+    def to_json(self):
+        return self._block.to_json()
+
+    @classmethod
+    def from_json(cls, json_data):
+        tx_block = cls()
+        tx_block._block = blockchain.Block.from_json(json_data)
+        return tx_block
+
     def add_tx(self, tx):
         self._block.data += (tx.to_json() + '\n').encode()
 

@@ -32,7 +32,6 @@ class Tx:
             self.add_required(args)
 
     def to_json(self):
-        # create a byte-encoded json representation of the transaction.
         return json.dumps({
             'inputs': self._inputs,
             'outputs': self._outputs,
