@@ -12,8 +12,6 @@ Tx represents a transaction and it's properties.
 Tx inner data is stored as str and not bytes, decoding as late as the calling interfaces allows it to.
 In cases where a non UTF-8 byte-encoding is used, binary data is base64 encoded before converting to str.
 This makes serialization/deserialization easier at some expense of serdes code to convert to/from Python objects leaking into the business logic. This can be greatly improved upon.
-
-TODO improve serdes encapsulation within the code. it can be confusing to read, particularly for _signatures right now.
 """
 class Tx:
     def __init__(self, inputs=[], outputs=[], required=[]):
