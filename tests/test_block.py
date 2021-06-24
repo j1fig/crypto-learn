@@ -1,3 +1,5 @@
+import os
+
 import block
 import sign
 import transaction
@@ -73,6 +75,7 @@ def test_block_serdes():
         f.write(root.to_json())
     with open('block.json', 'r') as f:
         root = block.TxBlock.from_json(f.read())
+    os.remove('block.json')
 
     assert root.is_valid()
 

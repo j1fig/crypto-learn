@@ -1,3 +1,5 @@
+import os
+
 import sign
 import transaction
 
@@ -131,5 +133,6 @@ def test_serdes():
         f.write(tx.to_json())
     with open('tx.json', 'r') as f:
         tx = transaction.Tx.from_json(f.read())
+    os.remove('tx.json')
 
     assert tx.is_valid()
