@@ -28,6 +28,30 @@ def test_single_block():
     assert root.is_valid()
 
 
+def test_mining():
+    pvt1, pub1 = sign.gen_keys()
+    pvt2, pub2 = sign.gen_keys()
+    pvt3, pub3 = sign.gen_keys()
+    pvt4, pub4 = sign.gen_keys()
+
+    root = block.TxBlock()
+    tx = transaction.Tx(
+        inputs=[(pub1, 1.1),],
+        outputs=[(pub2, 1),],
+    )
+    tx.sign(pvt1)
+    root.add_tx(tx)
+
+    # miner reward transaction.
+    tx2 = transaction.Tx(
+        outputs=[(pub4, 25.1),],
+    )
+    tx2.sign(pvt3)
+    root.add_tx(tx2)
+
+    assert root.is_valid()
+
+
 def test_bad_block():
     pvt1, pub1 = sign.gen_keys()
     pvt2, pub2 = sign.gen_keys()
