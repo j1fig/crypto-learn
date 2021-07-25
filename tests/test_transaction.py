@@ -92,15 +92,17 @@ def test_output_exceeds_input():
     pvt1, pub1 = sign.gen_keys()
     pvt2, pub2 = sign.gen_keys()
     pvt3, pub3 = sign.gen_keys()
+    pvt4, pub4 = sign.gen_keys()
     tx = transaction.Tx(
         inputs=[(pub1, 1), (pub2, 1)],
-        outputs=[(pub3, 4),],
+        outputs=[(pub3, 2), (pub4, 5),],
     )
     tx.sign(pvt1)
     tx.sign(pvt2)
 
-    # a transaction whose output amounts exceed the input amounts should not be valid.
-    assert not tx.is_valid()
+    # a transaction whose output amounts exceed the input amounts should be valid.
+    # this occurs for minig rewards.
+    assert tx.is_valid()
 
 
 def test_unsigned_escrow():

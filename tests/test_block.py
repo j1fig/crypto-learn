@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 import block
 import sign
 import transaction
@@ -52,6 +54,37 @@ def test_mining():
     assert root.is_valid()
 
 
+"""
+Transaction checks are now only done at the granular trasaction level and not
+at the block level.
+This must be also implemented at a block level so that mining rewards can be
+extracted and not abused.
+"""
+@pytest.mark.xfail
+def test_mining_greed():
+    pvt1, pub1 = sign.gen_keys()
+    pvt2, pub2 = sign.gen_keys()
+    pvt3, pub3 = sign.gen_keys()
+    pvt4, pub4 = sign.gen_keys()
+
+    root = block.TxBlock()
+    tx = transaction.Tx(
+        inputs=[(pub1, 1.1),],
+        outputs=[(pub2, 1),],
+    )
+    tx.sign(pvt1)
+    root.add_tx(tx)
+
+    # miner reward transaction.
+    tx2 = transaction.Tx(
+        outputs=[(pub4, 26.1),],
+    )
+    tx2.sign(pvt3)
+    root.add_tx(tx2)
+
+    assert not root.is_valid()
+
+
 def test_bad_block():
     pvt1, pub1 = sign.gen_keys()
     pvt2, pub2 = sign.gen_keys()
@@ -60,7 +93,7 @@ def test_bad_block():
     root = block.TxBlock()
     tx = transaction.Tx(
         inputs=[(pub1, 1),],
-        outputs=[(pub2, 100),],  # this makes the transaction invalid.
+        outputs=[(pub2, -100),],  # this makes the transaction invalid.
     )
     tx.sign(pvt1)
     root.add_tx(tx)

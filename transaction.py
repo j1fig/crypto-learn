@@ -1,3 +1,4 @@
+from decimal import Decimal, ROUND_DOWN
 import base64
 import json
 
@@ -5,6 +6,8 @@ from cryptography.hazmat.primitives import serialization
 
 import sign
 
+
+MINING_REWARD = 25
 
 """
 Tx represents a transaction and it's properties.
@@ -103,12 +106,15 @@ class Tx:
             print('negative amount detected')
             return False
 
-        # output amount must not exceed the inputs' amount.
-        input_amount = sum(v['amount'] for v in self._inputs.values())
-        output_amount = sum(v['amount'] for v in self._outputs.values())
-        if output_amount > input_amount:
-            print('output amount exceeds the input amount')
-            return False
+        # TODO Move this to a block level consistency check.
+        # output amount must not exceed the inputs' amount with the mining reward.
+        # input_amount = Decimal(sum(v['amount'] for v in self._inputs.values())).quantize(Decimal('0.0000000000001'), rounding=ROUND_DOWN)
+        # output_amount = Decimal(sum(v['amount'] for v in self._outputs.values())).quantize(Decimal('0.0000000000001'), rounding=ROUND_DOWN)
+        # if output_amount > input_amount + Decimal(MINING_REWARD):
+        #     print('output amount exceeds the input amount')
+        #     print(output_amount)
+        #     print(input_amount + Decimal(MINING_REWARD))
+        #     return False
 
         # all signatures should successfully verify the content.
         message = self._serialize_payload()
